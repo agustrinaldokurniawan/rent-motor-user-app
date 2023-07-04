@@ -1,7 +1,8 @@
 import ForgetPasswordScreen from "../forget-password";
 import LoginScreen from "../login";
 import SignupScreen from "../signup";
-import VerifyOtpScreen from "../verify-otp";
+import VerifyEmailScreen from "../verify-email";
+import NewPasswordScreen from '../new-password'
 
 export const AuthNavigations = [
   {
@@ -17,7 +18,11 @@ export const AuthNavigations = [
     component: ForgetPasswordScreen
   },
   {
-    name: 'VerifyOtp',
-    component: VerifyOtpScreen
+    name: 'VerifyEmail',
+    component: VerifyEmailScreen
+  },
+  {
+    name: 'NewPassword',
+    component: NewPasswordScreen
   }
 ]

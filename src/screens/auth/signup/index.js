@@ -10,7 +10,7 @@ export default function SignupScreen({ navigation }) {
   const [name, setName] = useState()
 
   const handleSignup = () => {
-    console.log({ email, password })
+    navigation.navigate('VerifyEmail')
   }
 
   return (

@@ -9,7 +9,10 @@ export default function LoginScreen({ navigation }) {
   const [password, setPassword] = useState()
 
   const handleLogin = () => {
-    console.log({ email, password })
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Home' }]
+    })
   }
 
   return (

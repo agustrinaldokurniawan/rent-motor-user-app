@@ -1,9 +1,9 @@
-import { Box } from "native-base";
+import { Box, ScrollView } from "native-base";
 
 export default function Layout({ children }) {
   return (
-    <Box bg={'white'} flex={1} px={6}>
+    <ScrollView bg={'white'} flex={1} p={6} showsVerticalScrollIndicator={false}>
       {children}
-    </Box>
+    </ScrollView>
   )
 }

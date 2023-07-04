@@ -8,13 +8,14 @@ export default function ForgetPasswordScreen({ navigation }) {
 
   const handleCheckEmail = () => {
     setIsOpen(true)
-    console.log({ email })
   }
 
   const cancelRef = useRef(null)
   const onOk = () => {
     setIsOpen(false)
-    navigation.navigate('VerifyOtp')
+    navigation.navigate('VerifyEmail', {
+      state: 'FORGET_PASSWORD'
+    })
   }
 
   const CheckEmailDialog = () => {
