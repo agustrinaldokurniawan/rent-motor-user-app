@@ -6,7 +6,7 @@ import VerticalMotorList from "../../components/list-motor/vertical";
 import { useState } from "react";
 import Empty from "../../components/empty";
 
-export default function MotorScreen({ navigation }) {
+export default function OrderScreen({ navigation }) {
   const [keyword, setKeyword] = useState('')
   const { listMotor } = listMotorApi({ keyword })
 
@@ -15,7 +15,7 @@ export default function MotorScreen({ navigation }) {
       <VStack space={8} pb={12}>
         <Input
           InputLeftElement={<Icon as={<EvilIcons name="search" />} size={5} ml="2" color="muted.400" />}
-          placeholder="Yamaha Mio"
+          placeholder="Nomor Order"
           borderRadius={'xl'}
           onChangeText={setKeyword}
           value={keyword}

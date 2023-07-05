@@ -7,6 +7,8 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import ProfileScreen from '../../screens/profile';
+import MotorScreen from '../../screens/motor';
+import OrderScreen from '../../screens/order';
 
 const Tab = createBottomTabNavigator();
 
@@ -35,14 +37,14 @@ export default function BottomTab() {
           headerShown: false,
           tabBarIcon: ({ color }) => <MaterialIcons name='sports-motorsports' size={32} color={color} />
         }}
-        component={ProfileScreen} />
+        component={MotorScreen} />
       <Tab.Screen
-        name="Store"
+        name="Order"
         options={{
           headerShown: false,
           tabBarIcon: ({ color }) => <FontAwesome5 name='store' size={24} color={color} />
         }}
-        component={ProfileScreen} />
+        component={OrderScreen} />
       <Tab.Screen
         name="Profile"
         options={{

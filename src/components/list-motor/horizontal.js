@@ -1,16 +1,18 @@
 import Carousel from 'react-native-reanimated-carousel'
 import { Dimensions } from 'react-native';
-import { Box, HStack, Heading, Pressable, Text, VStack } from 'native-base';
-import { useState } from 'react';
+import { Box, HStack, Heading, Pressable, Text } from 'native-base';
 import HorizontalMotorListItem from './horizontal-item';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { useNavigation } from "@react-navigation/native";
 
 export default function HorizontalMotorList({ data }) {
+  const navigation = useNavigation()
+
   return (
-    <Box my={8}>
+    <Box my={4}>
       <HStack justifyContent={'space-between'} mb={4}>
         <Heading size={'sm'}>Motor pilihan</Heading>
-        <Pressable>
+        <Pressable onPress={() => navigation.navigate('Motor')}>
           <Text>Lihat semua</Text>
         </Pressable>
       </HStack>

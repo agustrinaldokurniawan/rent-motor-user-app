@@ -1,8 +1,11 @@
-import MotorScreen from "..";
+import DetailMotorScreen from "../detail";
 
-export const HomeNavigations = [
+export const MotorNavigations = [
   {
-    name: 'Motor',
-    component: MotorScreen
+    name: 'DetailMotor',
+    component: DetailMotorScreen,
+    options: {
+      headerTransparent: true
+    }
   }
 ]

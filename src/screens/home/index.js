@@ -3,6 +3,7 @@ import Banner from "../../components/banner";
 import Layout from "../../components/layout";
 import HorizontalMotorList from "../../components/list-motor/horizontal";
 import TopBarHome from "./components/topBar";
+import { listMotorApi } from "../../api/motor";
 
 export default function HomeScreen({ navigation }) {
   const dataBanner = [
@@ -17,33 +18,14 @@ export default function HomeScreen({ navigation }) {
     }
   ]
 
-  const dataMotor = [
-    {
-      name: 'Nama Motor',
-      rating: '4.5',
-      price: 120000,
-      duration: 'day'
-    },
-    {
-      name: 'Nama Motor',
-      rating: '4.5',
-      price: 120000,
-      duration: 'day'
-    },
-    {
-      name: 'Nama Motor',
-      rating: '4.5',
-      price: 120000,
-      duration: 'day'
-    },
-  ]
+  const { listMotor } = listMotorApi()
 
   return (
     <Layout>
       <VStack space={4}>
         <TopBarHome />
         <Banner data={dataBanner} />
-        <HorizontalMotorList data={dataMotor} />
+        <HorizontalMotorList data={listMotor} />
       </VStack>
     </Layout>
   )
