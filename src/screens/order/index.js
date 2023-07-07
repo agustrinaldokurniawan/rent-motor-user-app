@@ -5,10 +5,32 @@ import { listMotorApi } from "../../api/motor";
 import VerticalMotorList from "../../components/list-motor/vertical";
 import { useState } from "react";
 import Empty from "../../components/empty";
+import useAuth from "../../auth";
+import CTALogin from "../../components/cta-login";
+import CTAOrder from "../../components/cta-order";
 
 export default function OrderScreen({ navigation }) {
   const [keyword, setKeyword] = useState('')
   const { listMotor } = listMotorApi({ keyword })
+  const [order, setOrder] = useState([])
+
+  const { getUser } = useAuth()
+
+  if (!getUser()) {
+    return (
+      <Layout>
+        <CTALogin />
+      </Layout>
+    )
+  }
+
+  if (!order.length) {
+    return (
+      <Layout>
+        <CTAOrder />
+      </Layout>
+    )
+  }
 
   return (
     <Layout>

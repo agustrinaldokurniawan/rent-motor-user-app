@@ -1,16 +1,24 @@
 import Carousel, { Pagination } from 'react-native-snap-carousel'
 // import BannerItem from './item'
 import { Dimensions } from 'react-native';
-import { Box, Heading, VStack } from 'native-base';
+import { Box, Heading, Image, VStack } from 'native-base';
 import { useState } from 'react';
 
 export default function Banner({ data }) {
   const [state, setState] = useState({ activeSlide: 0 })
 
-  const BannerItem = ({ item, index }) => {
+  const BannerItem = ({ item }) => {
     return (
       <VStack bg={'white'} borderRadius={"lg"} space={4}>
-        <Box bg={'muted.300'} h={'200px'} borderRadius={"lg"}>
+        <Box h={'200px'} borderRadius={"lg"}>
+          <Image
+            source={item.image}
+            w={'100%'}
+            h={'100%'}
+            resizeMode='contain'
+            alt={item.title}
+            borderRadius={'lg'}
+          />
         </Box>
         <Heading size={"xs"} color={'black'} textTransform={'capitalize'}>{item.title}</Heading>
       </VStack>

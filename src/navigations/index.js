@@ -12,7 +12,9 @@ export default function Navigations() {
         statusBarStyle: 'dark',
         headerShadowVisible: false,
         headerTitle: '',
-      }}>
+      }}
+        initialRouteName="Home"
+      >
         <Stack.Screen options={{ headerShown: false }} name="Bottomtab" component={BottomTab} />
         {routes.map((item, key) => (
           <Stack.Screen key={key} name={item.name} component={item.component} options={item.options} />))}

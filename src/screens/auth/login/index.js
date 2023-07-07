@@ -1,19 +1,51 @@
 import { Box, Button, FormControl, Heading, Icon, Input, Pressable, Stack, Text } from "native-base";
 import Layout from "../../../components/layout";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import { Keyboard } from "react-native";
+import useAuthApi from "../../../api/auth";
+import useAuth from "../../../auth";
+import { addMessage } from "@ouroboros/react-native-snackbar";
 
 export default function LoginScreen({ navigation }) {
   const [show, setShow] = useState(false)
   const [email, setEmail] = useState()
   const [password, setPassword] = useState()
+  const { mutationSignin } = useAuthApi()
+  const { setUser } = useAuth()
+
+  useEffect(() => {
+    onPostSignin();
+  }, [mutationSignin.isSuccess])
 
   const handleLogin = () => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Home' }]
-    })
+    mutationSignin.mutate({ email, password })
+    // navigation.reset({
+    //   index: 0,
+    //   routes: [{ name: 'Home' }]
+    // })
   }
+
+  const onPostSignin = async () => {
+    Keyboard.dismiss();
+    if (!mutationSignin.isSuccess) {
+      // console.log(mutationSignin.error)
+    } else {
+      if (mutationSignin.data.message) {
+        addMessage({
+          text: mutationSignin.data.message,
+          duration: 2000,
+        });
+      } else {
+        setUser(JSON.stringify(mutationSignin.data))
+        addMessage({
+          text: "Selamat datang kembali",
+          duration: 2000,
+        });
+        navigation.navigate("Home");
+      }
+    }
+  };
 
   return (
     <Layout>

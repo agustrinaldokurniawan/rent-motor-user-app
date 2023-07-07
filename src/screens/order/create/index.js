@@ -1,9 +1,9 @@
 import { Button, CheckIcon, Divider, HStack, Heading, Select, Text, VStack } from "native-base";
 import Layout from "../../../components/layout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MotorCard from "../../../components/card/motor";
 import UserInformation from "../components/user-information";
-import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
+import DateTimePickerModal from 'react-native-modal-datetime-picker'
 import moment from 'moment'
 
 export default function CreateOrderScreen({ navigation, route }) {
@@ -13,8 +13,8 @@ export default function CreateOrderScreen({ navigation, route }) {
   }
 
   const [selectedDuration, setSelectedDuration] = useState()
-  const [selectedDate, setSelectedDate] = useState(new Date())
-  const [selectedHour, setSelectedHour] = useState(new Date())
+  const [showDatePicker, setShowDatePicker] = useState(false)
+  const [selectedDate, setSelectedDate] = useState()
 
   const durationOption = [1, 2, 3, 4, 5]
 
@@ -22,22 +22,8 @@ export default function CreateOrderScreen({ navigation, route }) {
     navigation.navigate('OrderSuccess')
   }
 
-  const onPressSelectDate = () => {
-    DateTimePickerAndroid.open({
-      value: selectedDate,
-      minimumDate: new Date(),
-      onChange: setSelectedDate,
-      mode: 'date'
-    })
-  }
-
-  const onPressSelectHour = () => {
-    DateTimePickerAndroid.open({
-      value: selectedHour,
-      minimumDate: new Date(),
-      onChange: setSelectedHour,
-      mode: 'time'
-    })
+  const handleSelectDate = (value) => {
+    setSelectedDate(value)
   }
 
   return (
@@ -74,22 +60,25 @@ export default function CreateOrderScreen({ navigation, route }) {
 
 
         <HStack justifyContent={'space-between'} alignItems={'center'}>
-          <Heading size={"xs"}>Tanggal Pengambilan</Heading>
-          <Button onPress={onPressSelectDate}>Ganti Hari</Button>
+          <VStack>
+            <Heading size={"xs"}>Tanggal Pengambilan</Heading>
+            <Text>{moment(selectedDate).format('LLL')}</Text>
+          </VStack>
+          <Button onPress={() => setShowDatePicker(true)}>Ganti Hari</Button>
         </HStack>
 
-
-        <HStack justifyContent={'space-between'} alignItems={'center'}>
-          <Heading size={"xs"}>Jam Pengambilan</Heading>
-          <Button onPress={onPressSelectHour}>Ganti Jam</Button>
-        </HStack>
+        <DateTimePickerModal
+          isVisible={showDatePicker}
+          mode="datetime"
+          onConfirm={handleSelectDate}
+          onCancel={() => setShowDatePicker(false)}
+        />
 
         <Divider />
 
-
         <VStack space={2}>
           {
-            (selectedDuration || selectedDate || selectedHour)
+            (selectedDuration || selectedDate)
               ?
               <Heading size={"sm"}>
                 Ringkasan Order:
@@ -104,7 +93,9 @@ export default function CreateOrderScreen({ navigation, route }) {
 
           <HStack justifyContent={'space-between'} alignItems={'center'}>
             <Heading size={"xs"}>Jam Pengambilan</Heading>
-            <Text>{moment(selectedHour).hour()}:{moment(selectedHour).minute()}</Text>
+            <Text>
+              {moment(selectedDate).hour()}:{moment(selectedDate).minute()}
+            </Text>
           </HStack>
 
           {
