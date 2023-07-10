@@ -1,33 +1,30 @@
-import { Box, Button, Center, Heading, Image, Text, ZStack } from "native-base";
+import { Center, Text } from "native-base";
+import { useEffect } from "react";
+import * as Location from "expo-location";
+import { useDispatch } from "react-redux";
+import { setLocation } from "../../redux/reducer/location";
 
 export default function SplashScreen({ navigation }) {
+  const dispatch = useDispatch();
   const onPressStart = () => {
-    navigation.navigate('Login')
-  }
+    navigation.navigate("Login");
+  };
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log({ status });
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      dispatch(setLocation(location));
+    })();
+  }, []);
+
   return (
     <Center flex={1}>
-      <ZStack h={'100%'} w={'100%'}>
-        <Box h={'100%'} w={'100%'}>
-          <Image
-            source={require('../../assets/images/pexels-gijs-coolen-2549941.jpg')}
-            alt="Motor"
-            w={'100%'}
-            h={'100%'}
-            resizeMode="cover"
-          />
-        </Box>
-        <Box h={'100%'} w={'100%'} bg={"muted.900"} opacity={.3} />
-        <Box h={'100%'} w={'100%'} p={4} justifyContent={'space-between'}>
-          <Heading color={"white"}>Swift Ride</Heading>
-          <Box>
-            <Heading size={"3xl"} color={"white"}>Siap melaju ke petualangan?</Heading>
-            <Text color={"white"}>Mulai sewa motor dan jelajahi dunia!</Text>
-            <Button onPress={onPressStart} mt={4} py={4} borderRadius={"2xl"}>
-              <Heading color={'white'} size={"sm"}>Mulai Sekarang</Heading>
-            </Button>
-          </Box>
-        </Box>
-      </ZStack>
+      <Text>Splash</Text>
     </Center>
-  )
+  );
 }

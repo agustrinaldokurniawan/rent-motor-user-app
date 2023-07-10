@@ -1,21 +1,22 @@
 import { VStack } from "native-base";
 import { useNavigation } from "@react-navigation/native";
-import VerticalMotorListItem from "./vertical-item";
+import OrderItem from "./order-item";
 
-export default function VerticalMotorList({ motor }) {
+export default function ListOrder({ order }) {
   const navigation = useNavigation();
+  console.log({ order });
   const onPressDetail = (item) => {
-    navigation.navigate("DetailMotor", {
-      motor: item,
+    navigation.navigate("DetailOrder", {
+      order: item,
     });
   };
 
   return (
     <VStack space={8}>
-      {motor.map((item, key) => (
-        <VerticalMotorListItem
+      {order.map((item, key) => (
+        <OrderItem
           key={key}
-          motor={item}
+          order={item}
           onPress={() => {
             onPressDetail(item);
           }}

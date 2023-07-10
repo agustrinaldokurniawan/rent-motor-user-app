@@ -1,38 +1,69 @@
-import { Box, Button, Center, FormControl, Heading, Input, Pressable, Text, VStack } from "native-base";
+import {
+  Box,
+  Button,
+  Center,
+  FormControl,
+  Heading,
+  Image,
+  Input,
+  Pressable,
+  Text,
+  VStack,
+} from "native-base";
 import Layout from "../../components/layout";
 import { useEffect, useState } from "react";
 import CTALogin from "../../components/cta-login";
-import useAuth from "../../auth";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../redux/reducer/user";
+import { fetchImageFromFirebase } from "../../utils/fetchImageFromFirebase";
 
 export default function ProfileScreen({ navigation }) {
-  const [name, setName] = useState()
-  const [email, setEmail] = useState()
-  const [address, setAddress] = useState()
-  const [phoneNumber, setPhoneNumber] = useState()
+  const [name, setName] = useState(null);
+  const [email, setEmail] = useState(null);
+  const [image, setImage] = useState();
+  const dispatch = useDispatch();
 
-  const { getUser } = useAuth()
+  const user = useSelector((state) => state.user.value);
 
   useEffect(() => {
-    if (getUser()) {
-      setUser()
+    if (user) {
+      setUser();
+      fetchImage();
     }
-  }, [getUser()])
+  }, [user]);
+
+  const fetchImage = async () => {
+    const data = await JSON.parse(user);
+    const resp = await fetchImageFromFirebase(data.photoURL);
+    if (typeof resp === "string") {
+      setImage(resp);
+    }
+  };
 
   const setUser = async () => {
-    const user = await getUser()
-    setEmail(user.email)
-  }
+    const data = await JSON.parse(user);
+    setEmail(data.email);
+    setName(data.displayName);
+    setImage(data.photoUrl);
+  };
 
   const isDisabled = () => {
-    return true
-  }
+    if (!name) {
+      return true;
+    }
+  };
 
-  if (!getUser()) {
+  const onPressLogout = () => {
+    dispatch(logout());
+    navigation.navigate("Home");
+  };
+
+  if (!user) {
     return (
       <Layout>
         <CTALogin />
       </Layout>
-    )
+    );
   }
 
   return (
@@ -41,11 +72,30 @@ export default function ProfileScreen({ navigation }) {
         <Heading>Profil Akun</Heading>
         <Center>
           <VStack space={4}>
-            <Box w={100} alignItems={'center'} justifyContent={'center'} h={100} bg={"muted.300"} borderRadius={"lg"}>
-              <Text color={"white"}>No Image</Text>
+            <Box
+              w={100}
+              alignItems={"center"}
+              justifyContent={"center"}
+              h={100}
+              bg={"muted.300"}
+              borderRadius={"lg"}
+            >
+              {!image ? (
+                <Text color={"white"}>No Image</Text>
+              ) : (
+                <Image
+                  source={{ uri: image }}
+                  alt="Profile"
+                  width={"100%"}
+                  height={"100%"}
+                  borderRadius={"lg"}
+                />
+              )}
             </Box>
             <Pressable>
-              <Text textAlign={'center'} color={"primary.600"}>Ganti Foto</Text>
+              <Text textAlign={"center"} color={"primary.600"}>
+                Ganti Foto
+              </Text>
             </Pressable>
           </VStack>
         </Center>
@@ -62,35 +112,21 @@ export default function ProfileScreen({ navigation }) {
 
         <FormControl>
           <FormControl.Label>Email</FormControl.Label>
-          <Input
-            value={email}
-            borderRadius={"full"}
-            isDisabled={true}
-          />
+          <Input value={email} borderRadius={"full"} isDisabled={true} />
         </FormControl>
 
-        <FormControl>
-          <FormControl.Label>Nomor Hp</FormControl.Label>
-          <Input
-            value={phoneNumber}
-            borderRadius={"full"}
-            placeholder="Nomor Hp kamu"
-            onChangeText={setPhoneNumber}
-          />
-        </FormControl>
+        <Button borderRadius={"lg"} isDisabled={isDisabled()}>
+          Simpan perubahan
+        </Button>
 
-        <FormControl>
-          <FormControl.Label>Alamat</FormControl.Label>
-          <Input
-            value={address}
-            borderRadius={"full"}
-            placeholder="Jalan, kota, nomor pos"
-            onChangeText={setAddress}
-          />
-        </FormControl>
-
-        <Button borderRadius={"lg"} isDisabled={isDisabled}>Simpan perubahan</Button>
+        <Button
+          borderRadius={"lg"}
+          colorScheme={"danger"}
+          onPress={onPressLogout}
+        >
+          Keluar
+        </Button>
       </VStack>
     </Layout>
-  )
+  );
 }
