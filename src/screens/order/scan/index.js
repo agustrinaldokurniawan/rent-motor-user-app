@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Button } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
+import { confirmOrder } from "../../../api/order";
+import { addMessage } from "@ouroboros/react-native-snackbar";
 
-export default function ScanOrderScreen() {
+export default function ScanOrderScreen({ route, navigation }) {
+  const { order } = route.params;
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+
+  const { mutationUpdate } = confirmOrder();
 
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
@@ -17,7 +22,13 @@ export default function ScanOrderScreen() {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    console.log({ order: order.id });
+    mutationUpdate.mutate({ id: order.id });
+    addMessage({
+      text: "Order telah selesai",
+      duration: 1000,
+    });
+    navigation.navigate("OrderPaid");
   };
 
   if (hasPermission === null) {

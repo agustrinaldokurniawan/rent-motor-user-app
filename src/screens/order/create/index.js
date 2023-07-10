@@ -73,6 +73,7 @@ export default function CreateOrderScreen({ navigation, route }) {
       duration: selectedDuration,
       pickupDate: selectedDate,
       userEmail: parsedUser.email,
+      userName: parsedUser.displayName,
       phoneNumber: phoneNumber,
       address,
       orderNumber: String(Date.now()),

@@ -24,10 +24,8 @@ export default function DetailOrderScreen({ navigation, route }) {
 
   const onPressConfirm = () => {
     navigation.navigate("ScanOrder", {
-      data: {
-        order,
-        dataMotor,
-      },
+      order,
+      dataMotor,
     });
   };
 
@@ -114,9 +112,21 @@ export default function DetailOrderScreen({ navigation, route }) {
             ""
           )}
         </VStack>
-        <Button borderRadius={"lg"} onPress={onPressConfirm}>
-          Scan untuk menyelesaikan
-        </Button>
+        {order?.status !== "booked" ? (
+          <HStack justifyContent={"space-between"} alignItems={"center"}>
+            <Heading size={"xs"}>Status</Heading>
+            <Text>Sedang Digunakan</Text>
+          </HStack>
+        ) : (
+          ""
+        )}
+        {order?.status === "booked" ? (
+          <Button borderRadius={"lg"} onPress={onPressConfirm}>
+            Scan untuk menyelesaikan
+          </Button>
+        ) : (
+          ""
+        )}
       </VStack>
     </Layout>
   );

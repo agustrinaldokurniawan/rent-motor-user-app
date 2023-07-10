@@ -1,5 +1,6 @@
 import CreateOrderScreen from "../create";
 import DetailOrderScreen from "../detail";
+import OrderPaidScreen from "../order-success";
 import OrderSuccessScreen from "../order-success";
 import ScanOrderScreen from "../scan";
 
@@ -11,6 +12,10 @@ export const OrderNavigation = [
   {
     name: "OrderSuccess",
     component: OrderSuccessScreen,
+  },
+  {
+    name: "OrderPaid",
+    component: OrderPaidScreen,
   },
   {
     name: "DetailOrder",

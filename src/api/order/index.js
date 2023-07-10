@@ -6,6 +6,7 @@ import {
   getDocs,
   getDoc,
   doc,
+  updateDoc,
 } from "firebase/firestore";
 import { useMutation, useQuery } from "react-query";
 import { dbFirestore } from "../../firebase/firestore";
@@ -33,7 +34,7 @@ export const listOrder = () => {
       const querySnapshot = await getDocs(q);
       const order = querySnapshot?.docs?.map((doc) => {
         return {
-          id: doc,
+          id: doc.id,
           ...doc.data(),
         };
       });
@@ -70,4 +71,23 @@ export const listOrder = () => {
   // };
 
   // return { isLoading, error, data, refetch };
+};
+
+export const confirmOrder = () => {
+  const updateData = async ({ payload, id }) => {
+    const docRef = doc(dbFirestore, "orders", id);
+    console.log({ docRef, id });
+
+    await updateDoc(docRef, {
+      status: "paid",
+    }).catch((err) => {
+      console.log({ err });
+    });
+  };
+
+  const mutationUpdate = useMutation({
+    mutationFn: (payload) => updateData(payload),
+  });
+
+  return { mutationUpdate };
 };
