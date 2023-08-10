@@ -17,6 +17,11 @@ import moment from "moment";
 import useOrderApi from "../../../api/order";
 import { addMessage } from "@ouroboros/react-native-snackbar";
 import { useSelector } from "react-redux";
+import axios from 'axios'
+import { url } from "../../../config/url";
+import * as Crypto from "expo-crypto";
+import { apiKey } from "../../../config/api-key";
+import * as Linking from 'expo-linking';
 
 export default function CreateOrderScreen({ navigation, route }) {
   const { mutationSubmit } = useOrderApi();
@@ -43,7 +48,7 @@ export default function CreateOrderScreen({ navigation, route }) {
 
   const durationOption = [1, 2, 3, 4, 5];
 
-  const onPressConfirm = () => {
+  const onPressConfirm = async () => {
     if (!address) {
       return addMessage({
         text: "Silahkan isi alamat kamu",
@@ -68,6 +73,33 @@ export default function CreateOrderScreen({ navigation, route }) {
         duration: 1000,
       });
     }
+    const timestamp = Date.now()
+    const orderNumber = String(timestamp)
+    const duitkuSignature = await Crypto.digestStringAsync(
+      Crypto.CryptoDigestAlgorithm.SHA256,
+      `${apiKey.duitku.merchant_code}${timestamp}${apiKey.duitku.api_key}`
+    )
+    const invoice = await axios.post(
+      `${url.duitku}/merchant/createInvoice`,
+      {
+        paymentAmount: Number(Number(motor.price) * Number(selectedDuration)),
+        merchantOrderId: orderNumber,
+        productDetails: 'Pembayaran Rental Motor',
+        email: parsedUser.email,
+        callbackUrl: `${url.callback}/api/payment`,
+        returnUrl: url.callback,
+      },
+      {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'x-duitku-signature': duitkuSignature,
+          'x-duitku-timestamp': timestamp,
+          'x-duitku-merchantcode': apiKey.duitku.merchant_code,
+        },
+      },
+    ).then((res) => res.data)
+
     const payload = {
       motorName: motor.name,
       duration: selectedDuration,
@@ -76,10 +108,12 @@ export default function CreateOrderScreen({ navigation, route }) {
       userName: parsedUser.displayName,
       phoneNumber: phoneNumber,
       address,
-      orderNumber: String(Date.now()),
+      orderNumber,
       status: "booked",
+      invoice
     };
     mutationSubmit.mutate(payload);
+    Linking.openURL(invoice.paymentUrl);
   };
 
   const isDisabled =
